@@ -24,3 +24,4 @@ class PeriodStock(models.Model):
     CompanyName = models.CharField(max_length=20)
     Start = models.CharField(max_length=8)
     End = models.CharField(max_length=8)
+    ChangedPrice = models.FloatField()
