@@ -15,5 +15,12 @@ class User(models.Model):
 
 
 class StockRn(models.Model):
-    nameCompany = models.CharField(max_length=50)
+    nameCompany = models.CharField(max_length=20)
     currentPrice = models.FloatField(null=True, blank=True)
+    published = models.DateTimeField(auto_now_add=True, db_index=True)
+
+
+class PeriodStock(models.Model):
+    CompanyName = models.CharField(max_length=20)
+    Start = models.CharField(max_length=8)
+    End = models.CharField(max_length=8)
