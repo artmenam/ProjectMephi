@@ -107,7 +107,8 @@ def calculate(
 def predict(start_d, end_d):
     generated_filename = get_forecast(start_d, end_d)
     df = pd.read_csv(os.path.join(OUT_DIR, generated_filename))
-    calculate(df)
+    return calculate(df)
+
 
 
 

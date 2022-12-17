@@ -6,3 +6,4 @@ urlpatterns = [
     path('index/', index),
     path('predict/',predict1)
 ]
+
