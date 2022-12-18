@@ -1,11 +1,9 @@
 import numpy as np
 import pandas as pd
-from matplotlib import pyplot as plt
 import uuid
 import os
 import datetime
 import time
-from sklearn.preprocessing import StandardScaler
 from keras.models import Sequential
 from keras.layers import LSTM
 from keras.layers import Dense, Dropout
@@ -42,9 +40,24 @@ def get_forecast(period1, period2, ticker='AAPL', interval='1d'):  # запис�
     query_string = f'https://query1.finance.yahoo.com/v7/finance/download/{ticker}?period1={period1}&period2={period2}&interval={interval}&events=history&includeAdjustedClose=true'
     df = pd.read_csv(query_string)
     df.to_csv(fullname, index=False)
+    print(df)
     return generated_fn
 
     # return df
+
+
+def get_forecast1(period1, period2, ticker='AAPL', interval='1d'):
+    generated_fn = generate_filename('csv')
+    if not os.path.exists(OUT_DIR):
+        os.mkdir(OUT_DIR)
+    fullname = os.path.join(OUT_DIR, generated_fn)
+
+    period1, period2 = convert_dates_to_epoch_format(period1, period2)
+
+    query_string = f'https://query1.finance.yahoo.com/v7/finance/download/{ticker}?period1={period1}&period2={period2}&interval={interval}&events=history&includeAdjustedClose=true'
+    df = pd.read_csv(query_string)
+    df.to_csv(fullname, index=False)
+    return df
 
 
 # start_d = '2021-10-14'
@@ -101,14 +114,10 @@ def calculate(
         forecast_dates.append(time_i.date())
     df_forecast = pd.DataFrame({'Date': np.array(forecast_dates), 'Adj Close': y_pred_future})
 
-    return str(df_forecast.value[0][0]), df_forecast.value[0][1]
+    return str(df_forecast.values[1][0]), df_forecast.values[1][1]
 
 
 def predict(start_d, end_d):
     generated_filename = get_forecast(start_d, end_d)
     df = pd.read_csv(os.path.join(OUT_DIR, generated_filename))
     return calculate(df)
-
-
-
-
