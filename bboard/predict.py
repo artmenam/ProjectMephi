@@ -46,18 +46,18 @@ def get_forecast(period1, period2, ticker='AAPL', interval='1d'):  # запис�
     # return df
 
 
-# def get_forecast1(period1, period2, ticker='AAPL', interval='1d'):
-#     generated_fn = generate_filename('csv')
-#     if not os.path.exists(OUT_DIR):
-#         os.mkdir(OUT_DIR)
-#     fullname = os.path.join(OUT_DIR, generated_fn)
-#
-#     period1, period2 = convert_dates_to_epoch_format(period1, period2)
-#
-#     query_string = f'https://query1.finance.yahoo.com/v7/finance/download/{ticker}?period1={period1}&period2={period2}&interval={interval}&events=history&includeAdjustedClose=true'
-#     df = pd.read_csv(query_string)
-#     df.to_csv(fullname, index=False)
-#     return df
+def get_forecast1(period1, period2, ticker='AAPL', interval='1d'):
+    generated_fn = generate_filename('csv')
+    if not os.path.exists(OUT_DIR):
+        os.mkdir(OUT_DIR)
+    fullname = os.path.join(OUT_DIR, generated_fn)
+
+    period1, period2 = convert_dates_to_epoch_format(period1, period2)
+
+    query_string = f'https://query1.finance.yahoo.com/v7/finance/download/{ticker}?period1={period1}&period2={period2}&interval={interval}&events=history&includeAdjustedClose=true'
+    df = pd.read_csv(query_string)
+    df.to_csv(fullname, index=False)
+    return df
 
 
 # start_d = '2021-10-14'
@@ -67,7 +67,7 @@ def get_forecast(period1, period2, ticker='AAPL', interval='1d'):  # запис�
 def calculate(
         data_file,
         batch_size=15,
-        epochs=20,
+        epochs=100,
         end_date=datetime.datetime.now().strftime("%Y-%m-%d")
 ):
     #     df = pd.read_csv(os.path.join(OUT_DIR, data_file))

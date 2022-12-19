@@ -3,7 +3,7 @@ import json
 from django.http import HttpResponse, JsonResponse
 
 from .models import Bb, pred
-from .predict import predict
+from .predict import predict, get_forecast1
 from .serializers import RubricSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
