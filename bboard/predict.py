@@ -46,18 +46,18 @@ def get_forecast(period1, period2, ticker='AAPL', interval='1d'):  # запис�
     # return df
 
 
-def get_forecast1(period1, period2, ticker='AAPL', interval='1d'):
-    generated_fn = generate_filename('csv')
-    if not os.path.exists(OUT_DIR):
-        os.mkdir(OUT_DIR)
-    fullname = os.path.join(OUT_DIR, generated_fn)
-
-    period1, period2 = convert_dates_to_epoch_format(period1, period2)
-
-    query_string = f'https://query1.finance.yahoo.com/v7/finance/download/{ticker}?period1={period1}&period2={period2}&interval={interval}&events=history&includeAdjustedClose=true'
-    df = pd.read_csv(query_string)
-    df.to_csv(fullname, index=False)
-    return df
+# def get_forecast1(period1, period2, ticker='AAPL', interval='1d'):
+#     generated_fn = generate_filename('csv')
+#     if not os.path.exists(OUT_DIR):
+#         os.mkdir(OUT_DIR)
+#     fullname = os.path.join(OUT_DIR, generated_fn)
+#
+#     period1, period2 = convert_dates_to_epoch_format(period1, period2)
+#
+#     query_string = f'https://query1.finance.yahoo.com/v7/finance/download/{ticker}?period1={period1}&period2={period2}&interval={interval}&events=history&includeAdjustedClose=true'
+#     df = pd.read_csv(query_string)
+#     df.to_csv(fullname, index=False)
+#     return df
 
 
 # start_d = '2021-10-14'
@@ -113,11 +113,18 @@ def calculate(
     for time_i in forecast_period_dates:
         forecast_dates.append(time_i.date())
     df_forecast = pd.DataFrame({'Date': np.array(forecast_dates), 'Adj Close': y_pred_future})
+    print(df_forecast)
+    return df_forecast
 
-    return str(df_forecast.values[1][0]), df_forecast.values[1][1]
 
-
-def predict(start_d, end_d):
-    generated_filename = get_forecast(start_d, end_d)
+def predict(start_d, end_d, name):
+    generated_filename = get_forecast(start_d, end_d, name)
     df = pd.read_csv(os.path.join(OUT_DIR, generated_filename))
-    return calculate(df)
+    df_forecast = calculate(df)
+    df_forecast['Date'] = df_forecast['Date'].apply(lambda x: x.strftime("%Y-%m-%d"))
+    l = []
+    for row in df_forecast.values:
+        row_dict = {'price': row[1], 'date': row[0]}
+        print(row_dict)
+        l.append(row_dict)
+    return l

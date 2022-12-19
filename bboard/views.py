@@ -1,7 +1,13 @@
-from django.http import HttpResponse
+import json
 
-from .models import Bb
-from .predict import predict, get_forecast1
+from django.http import HttpResponse, JsonResponse
+
+from .models import Bb, pred
+from .predict import predict
+from .serializers import RubricSerializer
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework.response import Response
 
 
 def index(request):
@@ -11,13 +17,15 @@ def index(request):
     return HttpResponse(s, content_type='text/plain; charset=utf-8')
 
 
-def predict1(request):
+# @api_view(['GET'])
+def predict1(request,stockname):
+    print(stockname)
     from1 = request.GET['from']
     to = request.GET['to']
-    s, y = predict(from1, to)
-    k = 'Предсказание:\r\n\r\n\r\n'
-    k += s + ' ' + str(y)
-    return HttpResponse(k, content_type='text/plain; charset=utf-8')
+    l = predict(from1, to, stockname)
+    print(l)
+    return HttpResponse(json.dumps(l), content_type="application/json")
+
 
 
 def stock(request):

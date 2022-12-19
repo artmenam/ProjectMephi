@@ -26,10 +26,7 @@ class PeriodStock(models.Model):
     End = models.CharField(max_length=8)
     ChangedPrice = models.FloatField()
 
-class Company(models.Model):
-    CompanyName = models.CharField(max_length=20)
-    PriceYear = models.FloatField()
-    PriceRn = models.FloatField()
-    PriceDay = models.FloatField()
-    PriceHour = models.FloatField()
+class pred(models.Model):
+    Date = models.CharField(max_length=20)
+    Price = models.FloatField(null=True,blank=True)
 
