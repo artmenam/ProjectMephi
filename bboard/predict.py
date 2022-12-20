@@ -40,10 +40,8 @@ def get_forecast(period1, period2, ticker='AAPL', interval='1d'):  # запис�
     query_string = f'https://query1.finance.yahoo.com/v7/finance/download/{ticker}?period1={period1}&period2={period2}&interval={interval}&events=history&includeAdjustedClose=true'
     df = pd.read_csv(query_string)
     df.to_csv(fullname, index=False)
-    print(df)
     return generated_fn
 
-    # return df
 
 
 def get_forecast1(period1, period2, ticker, interval='1d'):
@@ -71,9 +69,7 @@ def calculate(
         data_file,
         batch_size=15,
         epochs=100,
-        end_date=datetime.datetime.now().strftime("%Y-%m-%d")
 ):
-    #     df = pd.read_csv(os.path.join(OUT_DIR, data_file))
     df = data_file
     train_dates = pd.to_datetime(df['Date'])
     cols = list(df)[1:6]
@@ -116,7 +112,6 @@ def calculate(
     for time_i in forecast_period_dates:
         forecast_dates.append(time_i.date())
     df_forecast = pd.DataFrame({'Date': np.array(forecast_dates), 'Adj Close': y_pred_future})
-    print(df_forecast)
     return df_forecast
 
 
@@ -128,6 +123,5 @@ def predict(start_d, end_d, name):
     l = []
     for row in df_forecast.values:
         row_dict = {'price': row[1], 'date': row[0]}
-        print(row_dict)
         l.append(row_dict)
     return l

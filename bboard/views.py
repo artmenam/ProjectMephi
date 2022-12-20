@@ -12,7 +12,6 @@ def predict1(request, stockname):
     from1 = request.GET['from']
     to = request.GET['to']
     l = predict(from1, to, stockname)
-    print(l)
     return HttpResponse(json.dumps(l), content_type="application/json")
 
 
