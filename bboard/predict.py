@@ -46,7 +46,7 @@ def get_forecast(period1, period2, ticker='AAPL', interval='1d'):  # запис�
     # return df
 
 
-def get_forecast1(period1, period2, ticker='AAPL', interval='1d'):
+def get_forecast1(period1, period2, ticker, interval='1d'):
     generated_fn = generate_filename('csv')
     if not os.path.exists(OUT_DIR):
         os.mkdir(OUT_DIR)
@@ -57,11 +57,14 @@ def get_forecast1(period1, period2, ticker='AAPL', interval='1d'):
     query_string = f'https://query1.finance.yahoo.com/v7/finance/download/{ticker}?period1={period1}&period2={period2}&interval={interval}&events=history&includeAdjustedClose=true'
     df = pd.read_csv(query_string)
     df.to_csv(fullname, index=False)
-    return df
+    l = []
+    for row in df.values:
+        row_dict = {'price': row[4], 'date': row[0]}
+        l.append(row_dict)
+    return l
 
 
-# start_d = '2021-10-14'
-# end_d = '2022-05-07'
+
 
 
 def calculate(

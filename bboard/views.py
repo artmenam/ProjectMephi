@@ -1,24 +1,13 @@
 import json
+import requests
+import lxml
 
-from django.http import HttpResponse, JsonResponse
-
-from .models import Bb, pred
+from django.http import HttpResponse
 from .predict import predict, get_forecast1
-from .serializers import RubricSerializer
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework.response import Response
+from bs4 import BeautifulSoup
 
 
-def index(request):
-    s = 'Список объявлений:\r\n\r\n\r\n'
-    for bb in Bb.objects.order_by('-published'):
-        s += bb.title + '\r\n' + bb.content + '\r\n\r\n'
-    return HttpResponse(s, content_type='text/plain; charset=utf-8')
-
-
-# @api_view(['GET'])
-def predict1(request,stockname):
+def predict1(request, stockname):
     print(stockname)
     from1 = request.GET['from']
     to = request.GET['to']
@@ -27,14 +16,21 @@ def predict1(request,stockname):
     return HttpResponse(json.dumps(l), content_type="application/json")
 
 
-
-def stock(request):
+def stock(request, stockname):
     from1 = request.GET['from']
     to = request.GET['to']
-    stock = get_forecast1(from1, to).values
-    k = 'Date       Open       High       Low        Close      AdjClose\r\n'
-    for i in stock:
-        k += i[0] + ' ' + str("%.6f" % i[1]) + ' ' + str("%.6f" % i[2]) + ' ' + str("%.6f" % i[3]) + ' ' + str(
-            "%.6f" % i[4]) + ' ' + str("%.6f" % i[5]) + '\r\n'
-    print(k)
-    return HttpResponse(k, content_type='text/plain; charset=utf-8')
+    stock = get_forecast1(from1, to, stockname)
+    return HttpResponse(json.dumps(stock), content_type="application/json")
+
+
+def allstock(request):
+    url = 'https://finance.yahoo.com/lookup'
+    contets = requests.get(url).text
+    soup = BeautifulSoup(contets)
+    l = []
+    for row in soup.body.div.tbody.children:
+        stock_name = row.td.a.text
+        stock_price = list(row.children)[2].text
+        if ':' not in stock_name:
+            l.append({'stockName': stock_name, 'currentPrice': stock_price})
+    return HttpResponse(json.dumps(l), content_type="application/json")

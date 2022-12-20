@@ -1,10 +1,10 @@
 from django.urls import path
 
-from .views import index, predict1, stock
+from .views import predict1, stock, allstock
 
 urlpatterns = [
-    path('index/', index),
     path('prediction/<str:stockname>/',predict1),
-    path('stocks/', stock),
+    path('stocks/<str:stockname>/', stock),
+    path('stocks/', allstock),
 ]
 
