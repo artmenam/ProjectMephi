@@ -1,6 +1,5 @@
 import json
 import requests
-import lxml
 
 from django.http import HttpResponse
 from .predict import predict, get_forecast1
